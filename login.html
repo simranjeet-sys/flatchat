@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Log in · FlatChat</title>
+  <link rel="stylesheet" href="css/login.css">
+</head>
+<body>
+  <main class="auth">
+    <div class="auth__card">
+      <header class="auth__header">
+        <div class="auth__logo" aria-hidden="true">FC</div>
+        <h1>Welcome back</h1>
+        <p class="auth__subtitle">Log in to continue to FlatChat</p>
+      </header>
+
+      <form id="login-form" class="auth__form" novalidate>
+        <div class="field">
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" autocomplete="email" required>
+          <p class="field__error" id="email-error" aria-live="polite"></p>
+        </div>
+
+        <div class="field">
+          <div class="field__row">
+            <label for="password">Password</label>
+            <a href="#" class="link link--small">Forgot password?</a>
+          </div>
+          <div class="field__password">
+            <input id="password" name="password" type="password" autocomplete="current-password" required minlength="8">
+            <button type="button" class="field__toggle" id="toggle-password" aria-label="Show password" aria-pressed="false">Show</button>
+          </div>
+          <p class="field__error" id="password-error" aria-live="polite"></p>
+        </div>
+
+        <label class="checkbox">
+          <input type="checkbox" name="remember" id="remember">
+          <span>Remember me</span>
+        </label>
+
+        <p class="form__error" id="form-error" role="alert"></p>
+
+        <button type="submit" class="btn" id="submit-btn">Log in</button>
+      </form>
+
+      <p class="auth__footer">
+        Don't have an account? <a href="#" class="link">Sign up</a>
+      </p>
+    </div>
+  </main>
+
+  <script src="js/login.js"></script>
+</body>
+</html>
