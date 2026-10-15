@@ -140,7 +140,7 @@ body { height: 100vh; overflow: hidden; }
   align-self: flex-end;
   background: var(--primary);
   border-color: var(--primary);
-  color: #fff;
+  color: var(--on-primary);
 }
 .message__time { display: block; margin-top: 2px; font-size: 0.7rem; opacity: 0.7; text-align: right; }
 
@@ -166,7 +166,7 @@ body { height: 100vh; overflow: hidden; }
   padding: 0 18px;
   font: inherit;
   font-weight: 600;
-  color: #fff;
+  color: var(--on-primary);
   background: var(--primary);
   border: 0;
   border-radius: 999px;
