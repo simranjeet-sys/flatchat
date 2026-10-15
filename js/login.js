@@ -77,8 +77,7 @@
         remember: document.getElementById('remember').checked,
       });
       if (!result.ok) throw new Error(result.message || 'Invalid email or password.');
-      // TODO: redirect to the chat view once it exists.
-      submitBtn.textContent = 'Logged in';
+      window.location.href = 'index.html';
     } catch (err) {
       formError.textContent = err.message || 'Something went wrong. Please try again.';
       submitBtn.disabled = false;
