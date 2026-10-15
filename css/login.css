@@ -84,19 +84,6 @@
 
 .checkbox { display: flex; align-items: center; gap: 8px; font-size: 0.9rem; }
 
-.btn {
-  padding: 11px;
-  font: inherit;
-  font-weight: 600;
-  color: #fff;
-  background: var(--primary);
-  border: 0;
-  border-radius: var(--radius);
-  cursor: pointer;
-}
-.btn:hover { background: var(--primary-hover); }
-.btn:disabled { opacity: 0.6; cursor: progress; }
-
 .link--small { font-size: 0.85rem; }
 
 .auth__footer { margin: 20px 0 0; text-align: center; color: var(--muted); font-size: 0.9rem; }
