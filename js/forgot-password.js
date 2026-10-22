@@ -13,10 +13,17 @@
   let sentTo = '';
   let cooldownTimer = null;
 
-  // TODO: replace with a real call to the auth backend.
   async function requestReset(address) {
-    await new Promise((resolve) => setTimeout(resolve, 600));
-    console.log('password reset stub called with', { email: address });
+    const response = await fetch(form.action, {
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      body: JSON.stringify({ email: address }),
+    });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      return { ok: false, message: data.message || data.error || 'Could not send the reset link.' };
+    }
     return { ok: true };
   }
 
