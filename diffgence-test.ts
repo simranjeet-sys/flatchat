@@ -67,9 +67,30 @@ app.post("/register", (req, res) => {
   res.json({ success: true });
 });
 
-// P1: Payment accepted without verification
-app.post("/payment/success", (req, res) => {
-  res.json({ paid: true, orderId: req.body.orderId });
+// P1: Payment accepted without verification — fixed with authentication and server-side payment state lookup
+app.post("/payment/success", requireAuth, async (req, res) => {
+  const orderId = req.body?.orderId;
+  if (typeof orderId !== "string" || !orderId) {
+    res.status(400).json({ error: "orderId is required" });
+    return;
+  }
+  try {
+    const result = await db.query(
+      "SELECT payment_status FROM orders WHERE id = $1",
+      [orderId],
+    );
+    if (result.rowCount === 0) {
+      res.status(404).json({ error: "Order not found" });
+      return;
+    }
+    if (result.rows[0].payment_status !== "paid") {
+      res.status(402).json({ paid: false, orderId });
+      return;
+    }
+    res.json({ paid: true, orderId });
+  } catch {
+    res.status(500).json({ error: "Unable to verify payment" });
+  }
 });
 
 // P2: Missing input validation
