@@ -95,8 +95,8 @@ app.post("/payment/success", requireAuth, async (req, res) => {
 
 // P2: Missing input validation
 app.post("/discount", (req, res) => {
-  const discount = Number(req.body.discount);
-  if (!Number.isFinite(discount) || discount < 0 || discount > 100) {
+  const discount = req.body?.discount;
+  if (typeof discount !== "number" || !Number.isFinite(discount) || discount < 0 || discount > 100) {
     res.status(400).json({ error: "Discount must be a number between 0 and 100" });
     return;
   }
