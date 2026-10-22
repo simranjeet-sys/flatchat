@@ -13,10 +13,9 @@ app.get("/users", (req, res) => {
   res.json(users);
 });
 
-// P1: SQL injection vulnerability
+// P1: SQL injection vulnerability (fixed with a parameterized query)
 app.get("/user", async (req, res) => {
-  const query = `SELECT * FROM users WHERE id = '${req.query.id}'`;
-  const result = await db.query(query);
+  const result = await db.query("SELECT * FROM users WHERE id = $1", [req.query.id]);
   res.json(result.rows);
 });
 
