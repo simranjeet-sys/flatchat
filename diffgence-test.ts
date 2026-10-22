@@ -1,6 +1,6 @@
 ﻿// intentionally buggy code for Diffgence testing
 import express from "express";
-import { randomBytes, scryptSync, timingSafeEqual } from "node:crypto";
+import { createHash, randomBytes, scryptSync, timingSafeEqual } from "node:crypto";
 import { Pool } from "pg";
 
 const app = express();
@@ -65,6 +65,28 @@ app.post("/register", (req, res) => {
     passwordHash: `${salt}:${passwordHash}`,
   });
   res.json({ success: true });
+});
+
+// Password reset: issues a single-use, time-limited token. Only its hash is stored.
+const RESET_TOKEN_TTL_MS = 30 * 60 * 1000;
+const passwordResetTokens = new Map<string, { email: string; expiresAt: number }>();
+
+app.post("/api/password-reset", (req, res) => {
+  const email = req.body?.email;
+  if (typeof email !== "string" || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+    res.status(400).json({ message: "Enter a valid email address." });
+    return;
+  }
+  const normalizedEmail = email.trim().toLowerCase();
+  const user = users.find((u) => typeof u.email === "string" && u.email.trim().toLowerCase() === normalizedEmail);
+  if (user) {
+    const token = randomBytes(32).toString("hex");
+    const tokenHash = createHash("sha256").update(token).digest("hex");
+    passwordResetTokens.set(tokenHash, { email: normalizedEmail, expiresAt: Date.now() + RESET_TOKEN_TTL_MS });
+    // TODO: email `token` to the user via the mail provider once one is configured.
+  }
+  // Same response whether or not the account exists, so the endpoint can't be used to discover emails.
+  res.status(202).json({ message: "If an account exists for that email, a reset link is on its way." });
 });
 
 // P1: Payment accepted without verification — fixed with authentication and server-side payment state lookup
