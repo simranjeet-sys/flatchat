@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard · FlatChat</title>
+  <link rel="stylesheet" href="css/login.css">
+  <link rel="stylesheet" href="css/button.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+  <p id="dashboard-status" role="status" class="dashboard__subtitle">Loading your dashboard…</p>
+  <header class="topbar" id="dashboard-header" hidden>
+    <div class="topbar__brand">
+      <div class="topbar__logo" aria-hidden="true">FC</div>
+      <span>FlatChat</span>
+    </div>
+    <div class="topbar__user">
+      <span class="avatar" id="user-avatar" aria-hidden="true"></span>
+      <span class="topbar__name" id="user-name"></span>
+      <a href="login.html" class="btn btn--secondary btn--sm" id="logout-btn">Log out</a>
+    </div>
+  </header>
+
+  <main class="dashboard" id="dashboard-content" hidden>
+    <section class="dashboard__intro">
+      <h1 id="greeting">Welcome</h1>
+      <p class="dashboard__subtitle">Here's what's happening in your flat.</p>
+    </section>
+
+    <section class="stats" aria-label="Overview">
+      <div class="stat">
+        <p class="stat__label">Unread messages</p>
+        <p class="stat__value" id="stat-unread">–</p>
+      </div>
+      <div class="stat">
+        <p class="stat__label">Active chats</p>
+        <p class="stat__value" id="stat-chats">–</p>
+      </div>
+      <div class="stat">
+        <p class="stat__label">Flatmates</p>
+        <p class="stat__value" id="stat-members">–</p>
+      </div>
+    </section>
+
+    <div class="dashboard__grid">
+      <section class="panel" aria-labelledby="chats-title">
+        <div class="panel__header">
+          <h2 id="chats-title">Recent chats</h2>
+          <button type="button" class="btn btn--sm" id="new-chat-btn">New chat</button>
+        </div>
+        <ul class="chat-list" id="chat-list"></ul>
+        <p class="panel__empty" id="chat-empty" hidden>No chats yet. Start one!</p>
+      </section>
+
+      <section class="panel" aria-labelledby="members-title">
+        <div class="panel__header">
+          <h2 id="members-title">Flatmates</h2>
+        </div>
+        <ul class="member-list" id="member-list"></ul>
+      </section>
+    </div>
+  </main>
+
+  <script src="js/dashboard.js"></script>
+</body>
+</html>
