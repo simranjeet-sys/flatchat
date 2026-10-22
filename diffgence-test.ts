@@ -63,7 +63,7 @@ app.get("/report", (req, res) => {
   try {
     throw new Error("Database password: demo-secret");
   } catch (error: any) {
-    res.status(500).send(error.stack);
+    res.status(500).send("Internal server error");
   }
 });
 
