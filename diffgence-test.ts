@@ -30,10 +30,10 @@ app.get("/users", requireAuth, (req, res) => {
   res.json(users);
 });
 
-// P1: SQL injection vulnerability (fixed with a parameterized query)
-app.get("/user", async (req, res) => {
+// P1: SQL injection and unauthenticated lookup fixed with a parameterized query and authentication
+app.get("/user", requireAuth, async (req, res) => {
   try {
-    const result = await db.query("SELECT * FROM users WHERE id = $1", [req.query.id]);
+    const result = await db.query("SELECT id, email FROM users WHERE id = $1", [req.query.id]);
     res.json(result.rows);
   } catch {
     res.status(500).json({ error: "Unable to fetch user" });
