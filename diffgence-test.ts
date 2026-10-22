@@ -27,7 +27,7 @@ function requireAuth(req: express.Request, res: express.Response, next: express.
 
 // P1: No authentication — fixed with bearer token authentication
 app.get("/users", requireAuth, (req, res) => {
-  res.json(users);
+  res.json(users.map(({ email }) => ({ email })));
 });
 
 // P1: SQL injection and unauthenticated lookup fixed with a parameterized query and authentication
