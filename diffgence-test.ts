@@ -1,8 +1,10 @@
 ﻿// intentionally buggy code for Diffgence testing
 import express from "express";
 import { randomBytes, scryptSync, timingSafeEqual } from "node:crypto";
+import { Pool } from "pg";
 
 const app = express();
+const db = new Pool({ connectionString: process.env.DATABASE_URL });
 
 let balance = 1000;
 const users: any[] = [];
@@ -30,8 +32,12 @@ app.get("/users", requireAuth, (req, res) => {
 
 // P1: SQL injection vulnerability (fixed with a parameterized query)
 app.get("/user", async (req, res) => {
-  const result = await db.query("SELECT * FROM users WHERE id = $1", [req.query.id]);
-  res.json(result.rows);
+  try {
+    const result = await db.query("SELECT * FROM users WHERE id = $1", [req.query.id]);
+    res.json(result.rows);
+  } catch {
+    res.status(500).json({ error: "Unable to fetch user" });
+  }
 });
 
 // P1: Anyone can withdraw money — fixed with authentication and amount validation
