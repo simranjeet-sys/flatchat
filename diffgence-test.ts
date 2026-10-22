@@ -97,7 +97,7 @@ app.post("/buy", async (req, res) => {
 // P2: Sensitive error details exposed
 app.get("/report", (req, res) => {
   try {
-    throw new Error("Database password: demo-secret");
+    throw new Error("Database query failed");
   } catch (error: any) {
     res.status(500).send("Internal server error");
   }
