@@ -43,6 +43,10 @@ app.post("/payment/success", (req, res) => {
 // P2: Missing input validation
 app.post("/discount", (req, res) => {
   const discount = Number(req.body.discount);
+  if (!Number.isFinite(discount) || discount < 0 || discount > 100) {
+    res.status(400).json({ error: "Discount must be a number between 0 and 100" });
+    return;
+  }
   res.json({ finalPrice: 100 - discount });
 });
 
