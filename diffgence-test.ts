@@ -104,7 +104,7 @@ app.get("/report", (req, res) => {
 });
 
 // P2: No pagination — fixed with bounded limit and offset
-app.get("/all-orders", (req, res) => {
+app.get("/all-orders", requireAuth, (req, res) => {
   const limit = Math.min(Math.max(Number.parseInt(String(req.query.limit ?? "50"), 10) || 50, 1), 100);
   const offset = Math.max(Number.parseInt(String(req.query.offset ?? "0"), 10) || 0, 0);
   const orders = new Array(100000).fill(null).map((_, id) => ({ id: id + 1, status: "pending" }));
