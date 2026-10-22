@@ -1,0 +1,57 @@
+/*
+  Button component.
+  Usage: <button class="btn">, also works on <a class="btn">.
+  Variants: btn--secondary, btn--ghost, btn--danger
+  Sizes:    btn--sm, btn--lg, btn--block
+  States:   :disabled / aria-disabled="true", is-loading
+  Colors come from the theme tokens in login.css, with fallbacks.
+*/
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 11px 18px;
+  font: inherit;
+  font-weight: 600;
+  line-height: 1.2;
+  color: #fff;
+  background: var(--primary, #4f46e5);
+  border: 1px solid transparent;
+  border-radius: var(--radius, 10px);
+  text-decoration: none;
+  cursor: pointer;
+}
+.btn:hover { background: var(--primary-hover, #4338ca); }
+.btn:focus-visible { outline: 2px solid var(--primary, #4f46e5); outline-offset: 2px; }
+.btn:disabled,
+.btn[aria-disabled="true"] { opacity: 0.6; cursor: not-allowed; }
+
+.btn--secondary {
+  color: var(--text, #1c1e21);
+  background: var(--card, #fff);
+  border-color: var(--border, #d0d4da);
+}
+.btn--secondary:hover { background: var(--bg, #f4f5f7); }
+
+.btn--ghost { color: var(--primary, #4f46e5); background: transparent; }
+.btn--ghost:hover { background: color-mix(in srgb, var(--primary, #4f46e5) 12%, transparent); }
+
+.btn--danger { background: var(--error, #d93025); }
+.btn--danger:hover { background: color-mix(in srgb, var(--error, #d93025) 85%, #000); }
+
+.btn--sm { padding: 6px 12px; font-size: 0.85rem; }
+.btn--lg { padding: 13px 24px; font-size: 1.05rem; }
+.btn--block { width: 100%; }
+
+.btn.is-loading { cursor: progress; }
+.btn.is-loading::before {
+  content: "";
+  width: 1em;
+  height: 1em;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: btn-spin 0.7s linear infinite;
+}
+@keyframes btn-spin { to { transform: rotate(360deg); } }

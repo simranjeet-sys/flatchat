@@ -1,0 +1,138 @@
+/* Dashboard layout. Theme tokens come from login.css. */
+
+/* Components set `display`, which would otherwise override the hidden attribute. */
+[hidden] { display: none !important; }
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 24px;
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+}
+
+.topbar__brand { display: flex; align-items: center; gap: 10px; font-weight: 700; }
+
+.topbar__logo {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--primary);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-size: 0.85rem;
+}
+
+.topbar__user { display: flex; align-items: center; gap: 10px; }
+.topbar__name { font-size: 0.9rem; }
+
+.avatar {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--primary) 18%, transparent);
+  color: var(--primary);
+  display: grid;
+  place-items: center;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.dashboard {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 24px 16px 48px;
+}
+
+.dashboard__intro h1 { margin: 0 0 4px; font-size: 1.5rem; }
+.dashboard__subtitle { margin: 0 0 24px; color: var(--muted); }
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.stat, .panel {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+}
+
+.stat { padding: 18px 20px; }
+.stat__label { margin: 0 0 6px; font-size: 0.85rem; color: var(--muted); }
+.stat__value { margin: 0; font-size: 1.75rem; font-weight: 700; }
+
+.dashboard__grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 16px;
+}
+
+.panel { padding: 20px; }
+.panel__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.panel__header h2 { margin: 0; font-size: 1.1rem; }
+.panel__empty { margin: 0; color: var(--muted); font-size: 0.9rem; }
+
+.chat-list, .member-list { list-style: none; margin: 0; padding: 0; }
+
+.chat {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 8px;
+  border-radius: var(--radius);
+  color: inherit;
+  text-decoration: none;
+}
+.chat:hover { background: var(--bg); }
+
+.chat__body { flex: 1; min-width: 0; }
+.chat__title { margin: 0; font-weight: 600; font-size: 0.95rem; }
+.chat__preview {
+  margin: 2px 0 0;
+  color: var(--muted);
+  font-size: 0.85rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.chat__meta { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+.chat__time { font-size: 0.75rem; color: var(--muted); }
+
+.badge {
+  min-width: 20px;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: var(--primary);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.member {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  font-size: 0.9rem;
+}
+.member__status { margin-left: auto; font-size: 0.75rem; color: var(--muted); }
+.member__status--online { color: #1e8e3e; }
+
+@media (max-width: 720px) {
+  .dashboard__grid { grid-template-columns: 1fr; }
+  .topbar { padding: 12px 16px; }
+  .topbar__name { display: none; }
+}

@@ -1,0 +1,47 @@
+/*
+  Alert component.
+  Usage: <p class="alert" role="status">Message</p>
+  Variants: alert--error, alert--success
+  States:   is-loading (shows a spinner before the text)
+  Colors come from the theme tokens in login.css, with fallbacks.
+*/
+.alert {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: 1080px;
+  margin: 24px auto;
+  padding: 12px 16px;
+  font-size: 0.9rem;
+  color: var(--text, #1c1e21);
+  background: var(--card, #fff);
+  border: 1px solid var(--border, #d0d4da);
+  border-left: 4px solid var(--primary, #4f46e5);
+  border-radius: var(--radius, 10px);
+}
+
+.alert--error {
+  border-left-color: var(--error, #d93025);
+  background: color-mix(in srgb, var(--error, #d93025) 8%, var(--card, #fff));
+}
+
+.alert--success {
+  border-left-color: #1e8e3e;
+  background: color-mix(in srgb, #1e8e3e 8%, var(--card, #fff));
+}
+
+.alert.is-loading::before {
+  content: "";
+  flex-shrink: 0;
+  width: 1em;
+  height: 1em;
+  border: 2px solid var(--primary, #4f46e5);
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: alert-spin 0.7s linear infinite;
+}
+@keyframes alert-spin { to { transform: rotate(360deg); } }
+
+@media (max-width: 1112px) {
+  .alert { margin-left: 16px; margin-right: 16px; }
+}
