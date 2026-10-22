@@ -87,7 +87,7 @@
     document.getElementById('user-name').textContent = data.user.name;
     document.getElementById('user-avatar').textContent = initials(data.user.name);
 
-    document.getElementById('stat-unread').textContent = data.chats.reduce((sum, c) => sum + c.unread, 0);
+    document.getElementById('stat-unread').textContent = data.chats.reduce((sum, c) => sum + (Number(c.unread) || 0), 0);
     document.getElementById('stat-chats').textContent = data.chats.length;
     document.getElementById('stat-members').textContent = data.members.length;
 
@@ -97,7 +97,12 @@
     document.getElementById('dashboard-header').hidden = false;
     document.getElementById('dashboard-content').hidden = false;
   }).catch((error) => {
-    document.getElementById('dashboard-status').textContent = error.message ||
+    const status = document.getElementById('dashboard-status');
+    status.classList.remove('is-loading');
+    status.classList.add('alert--error');
+    status.setAttribute('role', 'alert');
+    // fetch() rejects with a TypeError on network failure; don't show its raw message.
+    status.textContent = (!(error instanceof TypeError) && error.message) ||
       'Dashboard data is unavailable. Please try again later.';
   });
 })();
