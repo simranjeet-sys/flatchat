@@ -71,22 +71,89 @@ app.post("/register", (req, res) => {
 const RESET_TOKEN_TTL_MS = 30 * 60 * 1000;
 const passwordResetTokens = new Map<string, { email: string; expiresAt: number }>();
 
-app.post("/api/password-reset", (req, res) => {
+function hashResetToken(token: string) {
+  return createHash("sha256").update(token).digest("hex");
+}
+
+function findUserByEmail(email: string) {
+  return users.find((u) => typeof u.email === "string" && u.email.trim().toLowerCase() === email);
+}
+
+function isMailConfigured() {
+  return Boolean(process.env.MAIL_API_URL && process.env.MAIL_API_KEY && process.env.MAIL_FROM && process.env.APP_URL);
+}
+
+// Delivers the reset link through the configured transactional mail HTTP API.
+async function sendResetEmail(to: string, token: string) {
+  const link = `${process.env.APP_URL}/reset-password.html?token=${encodeURIComponent(token)}`;
+  const response = await fetch(process.env.MAIL_API_URL as string, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Authorization: `Bearer ${process.env.MAIL_API_KEY}` },
+    body: JSON.stringify({
+      from: process.env.MAIL_FROM,
+      to,
+      subject: "Reset your FlatChat password",
+      text: `Use this link to reset your password. It expires in 30 minutes and can be used once:\n\n${link}`,
+    }),
+  });
+  if (!response.ok) throw new Error(`Mail API responded with ${response.status}`);
+}
+
+app.post("/api/password-reset", async (req, res) => {
   const email = req.body?.email;
   if (typeof email !== "string" || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
     res.status(400).json({ message: "Enter a valid email address." });
     return;
   }
+  // Don't claim a link was sent when there is no way to deliver one.
+  if (!isMailConfigured()) {
+    res.status(503).json({ message: "Password reset is temporarily unavailable. Please try again later." });
+    return;
+  }
   const normalizedEmail = email.trim().toLowerCase();
-  const user = users.find((u) => typeof u.email === "string" && u.email.trim().toLowerCase() === normalizedEmail);
-  if (user) {
+  if (findUserByEmail(normalizedEmail)) {
     const token = randomBytes(32).toString("hex");
-    const tokenHash = createHash("sha256").update(token).digest("hex");
+    const tokenHash = hashResetToken(token);
     passwordResetTokens.set(tokenHash, { email: normalizedEmail, expiresAt: Date.now() + RESET_TOKEN_TTL_MS });
-    // TODO: email `token` to the user via the mail provider once one is configured.
+    try {
+      await sendResetEmail(normalizedEmail, token);
+    } catch (error) {
+      passwordResetTokens.delete(tokenHash);
+      console.error("Failed to send password reset email", error);
+      res.status(503).json({ message: "Could not send the reset link. Please try again later." });
+      return;
+    }
   }
   // Same response whether or not the account exists, so the endpoint can't be used to discover emails.
   res.status(202).json({ message: "If an account exists for that email, a reset link is on its way." });
+});
+
+// Redeems a reset token: single use, rejected once expired, and sets the new password hash.
+app.post("/api/password-reset/confirm", (req, res) => {
+  const { token, password } = req.body ?? {};
+  if (typeof token !== "string" || !token) {
+    res.status(400).json({ message: "Reset link is invalid or has expired." });
+    return;
+  }
+  if (typeof password !== "string" || password.length < 8) {
+    res.status(400).json({ message: "Password must be at least 8 characters." });
+    return;
+  }
+  const tokenHash = hashResetToken(token);
+  const entry = passwordResetTokens.get(tokenHash);
+  passwordResetTokens.delete(tokenHash);
+  const user = entry && entry.expiresAt > Date.now() ? findUserByEmail(entry.email) : undefined;
+  if (!entry || !user) {
+    res.status(400).json({ message: "Reset link is invalid or has expired." });
+    return;
+  }
+  const salt = randomBytes(16).toString("hex");
+  user.passwordHash = `${salt}:${scryptSync(password, salt, 64).toString("hex")}`;
+  // Invalidate any other outstanding reset links for this account.
+  for (const [hash, pending] of passwordResetTokens) {
+    if (pending.email === entry.email) passwordResetTokens.delete(hash);
+  }
+  res.json({ message: "Your password has been reset. You can now log in." });
 });
 
 // P1: Payment accepted without verification — fixed with authentication and server-side payment state lookup
