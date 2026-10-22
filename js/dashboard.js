@@ -3,23 +3,13 @@
   const chatEmpty = document.getElementById('chat-empty');
   const memberList = document.getElementById('member-list');
 
-  // TODO: replace with a real call to the backend.
   async function loadDashboard() {
-    await new Promise((resolve) => setTimeout(resolve, 300));
-    return {
-      user: { name: 'Alex Morgan' },
-      chats: [
-        { id: 1, title: 'Flat 4B', preview: 'Who took the last of the milk?', time: '10:42', unread: 3 },
-        { id: 2, title: 'Bills & rent', preview: 'Electricity bill is due Friday', time: 'Yesterday', unread: 1 },
-        { id: 3, title: 'Cleaning rota', preview: 'Your turn for the kitchen this week', time: 'Mon', unread: 0 },
-      ],
-      members: [
-        { name: 'Alex Morgan', online: true },
-        { name: 'Sam Lee', online: true },
-        { name: 'Priya Shah', online: false },
-        { name: 'Jordan Kim', online: false },
-      ],
-    };
+    const response = await fetch('/api/dashboard', {
+      credentials: 'same-origin',
+      headers: { Accept: 'application/json' },
+    });
+    if (!response.ok) throw new Error('Dashboard data is unavailable. Please sign in and try again.');
+    return response.json();
   }
 
   function initials(name) {
@@ -88,6 +78,11 @@
   });
 
   loadDashboard().then((data) => {
+    if (!data || !data.user || typeof data.user.name !== 'string' ||
+        !Array.isArray(data.chats) || !Array.isArray(data.members)) {
+      throw new Error('Dashboard data is unavailable. Please try again later.');
+    }
+
     document.getElementById('greeting').textContent = 'Welcome, ' + data.user.name.split(' ')[0];
     document.getElementById('user-name').textContent = data.user.name;
     document.getElementById('user-avatar').textContent = initials(data.user.name);
@@ -98,5 +93,11 @@
 
     renderChats(data.chats);
     renderMembers(data.members);
+    document.getElementById('dashboard-status').hidden = true;
+    document.getElementById('dashboard-header').hidden = false;
+    document.getElementById('dashboard-content').hidden = false;
+  }).catch((error) => {
+    document.getElementById('dashboard-status').textContent = error.message ||
+      'Dashboard data is unavailable. Please try again later.';
   });
 })();

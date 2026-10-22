@@ -9,7 +9,8 @@
   <link rel="stylesheet" href="css/dashboard.css">
 </head>
 <body>
-  <header class="topbar">
+  <p id="dashboard-status" role="status" class="dashboard__subtitle">Loading your dashboard…</p>
+  <header class="topbar" id="dashboard-header" hidden>
     <div class="topbar__brand">
       <div class="topbar__logo" aria-hidden="true">FC</div>
       <span>FlatChat</span>
@@ -21,7 +22,7 @@
     </div>
   </header>
 
-  <main class="dashboard">
+  <main class="dashboard" id="dashboard-content" hidden>
     <section class="dashboard__intro">
       <h1 id="greeting">Welcome</h1>
       <p class="dashboard__subtitle">Here's what's happening in your flat.</p>
