@@ -9,11 +9,19 @@
   const submitBtn = document.getElementById('submit-btn');
   const formError = document.getElementById('form-error');
 
-  // TODO: replace with a real call to the auth backend.
   async function signup(details) {
-    await new Promise((resolve) => setTimeout(resolve, 600));
-    console.log('signup stub called with', { name: details.name, email: details.email });
-    return { ok: true };
+    const response = await fetch('/api/signup', {
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      body: JSON.stringify(details),
+    });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      return { ok: false, message: data.message || data.error || 'Could not create your account.' };
+    }
+    // Only treat the signup as successful once the backend confirms the account exists.
+    return { ok: data.created === true, message: data.message };
   }
 
   function setError(input, message) {
