@@ -4,9 +4,11 @@
   --text: #1c1e21;
   --muted: #65676b;
   --border: #d0d4da;
-  --primary: #4f46e5;
-  --primary-hover: #4338ca;
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --on-primary: #ffffff;
   --error: #d93025;
+  --on-error: #ffffff;
   --radius: 10px;
 }
 
@@ -17,9 +19,11 @@
     --text: #e8eaed;
     --muted: #9aa0a6;
     --border: #3a3d42;
-    --primary: #818cf8;
-    --primary-hover: #a5b4fc;
+    --primary: #60a5fa;
+    --primary-hover: #93c5fd;
+    --on-primary: #12131a;
     --error: #f28b82;
+    --on-error: #12131a;
   }
 }
 
