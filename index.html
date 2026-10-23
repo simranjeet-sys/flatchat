@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FlatChat</title>
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/home.css">
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar" id="sidebar">
+      <header class="sidebar__header">
+        <div class="logo" aria-hidden="true">FC</div>
+        <span class="sidebar__title">FlatChat</span>
+        <a href="login.html" class="link sidebar__logout">Log out</a>
+      </header>
+      <input type="search" class="sidebar__search" id="search" placeholder="Search chats" aria-label="Search chats">
+      <ul class="chat-list" id="chat-list"></ul>
+    </aside>
+
+    <main class="chat">
+      <header class="chat__header">
+        <button type="button" class="chat__back" id="back-btn" aria-label="Back to chats">&larr;</button>
+        <div class="avatar" id="chat-avatar"></div>
+        <div>
+          <h1 class="chat__name" id="chat-name"></h1>
+          <p class="chat__status" id="chat-status"></p>
+        </div>
+      </header>
+
+      <ol class="messages" id="messages" aria-live="polite"></ol>
+
+      <form class="composer" id="composer">
+        <input type="text" id="message-input" placeholder="Type a message" aria-label="Message" autocomplete="off">
+        <button type="submit" class="composer__send">Send</button>
+      </form>
+    </main>
+  </div>
+
+  <script src="js/home.js"></script>
+</body>
+</html>
